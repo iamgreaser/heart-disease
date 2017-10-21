@@ -46,7 +46,7 @@
                      logical-width)))
   (set! camera-y
     (min camera-y (- (* world-height 16)
-                     logical-height)))
+                     logical-height -8)))
   (set! camera-x (max camera-x 0))
   (set! camera-y (max camera-y 0)))
 

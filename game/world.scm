@@ -3,18 +3,25 @@
 (define color-world-wall-1 (al:make-color-rgb 170 170 170))
 
 (define world-grid
-  '#(#( 3 0 0 2 1 1 1 1 1 0 0 1 1 1 2 0 0 0 0 3)
-     #( 0 0 0 0 1 1 1 1 1 0 0 1 1 1 0 0 0 0 0 0)
+  '#(#( 3 0 0 2 1 1 1 0 0 0 0 1 1 1 2 0 0 0 0 3)
+     #( 0 0 0 0 1 1 1 0 0 0 0 1 1 1 0 0 0 0 0 0)
      #( 0 0 0 0 1 2 0 0 0 0 0 0 0 1 1 1 1 0 0 0)
      #( 0 0 0 0 1 0 0 0 0 0 0 0 0 1 1 1 1 0 0 0)
      #( 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 0 0 0 0 0 0 2 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 3 0 0 0 0 0 0 1 0 0 0 0 0 0 2 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 1 1 1 1 1 1 1 1 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 9 9 9 9 9 9 9 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 9 9 9 9 9 9 9 1 0 0 0 0 0 0 1 1 0 2 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 9 9 9 9 9 9 9 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 9 9 9 9 9 9 9 1 0 0 0 0 0 0 1 1 1 1 1 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 9 9 9 9 9 9 9 1 0 0 0 0 0 0 1 9 9 9 9 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 9 9 9 9 9 9 9 1 0 0 0 0 0 0 1 9 9 9 9 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      ))
 
 (define world-width
@@ -25,13 +32,13 @@
   (vector-length world-grid))
 
 (define (world-grid-ref x y)
-  (cond ((<  x 0) -1)
-        ((<  y 0) -1)
-        ((>= y (vector-length world-grid)) -1)
+  (cond ((<  x 0) 9)
+        ((<  y 0) 9)
+        ((>= y (vector-length world-grid)) 9)
         (else
           (let ((row (vector-ref world-grid y)))
             (if (>= x (vector-length row))
-              -1
+              9
               (vector-ref row x))))))
 
 (define (world-cell-is-solid-for-player cx cy)
@@ -63,6 +70,10 @@
       ((2) (draw-heart (+ x 8)
                        (+ y 8)
                        8))
+      ((9) (al:draw-rectangle/fill
+             (+ x  0) (+ y  0)
+             (+ x 16) (+ y 16)
+             color-black))
       (else
         (al:draw-rectangle/fill
           (+ x  0) (+ y  0)
@@ -130,14 +141,20 @@
       (else #f))))
 
 (define (tick-world!)
-  (let loop ((x 0)
-             (y 0))
-    (cond ((>= y world-height) #f)
-          ((>= x world-width)
-           (loop 0 (+ y 1)))
-          (else
-            (tick-world-cell! x y)
-            (loop (+ x 1) y)))))
+  (let* ((visible-x-min (quotient camera-x 16))
+         (visible-y-min (quotient camera-y 16))
+         (visible-x-max (quotient (+ camera-x -1 logical-width)
+                                  16))
+         (visible-y-max (quotient (+ camera-y -1 logical-height -8)
+                                  16)))
+    (let loop ((x visible-x-min)
+               (y visible-y-min))
+      (cond ((> y visible-y-max) #f)
+            ((> x visible-x-max)
+             (loop visible-x-min (+ y 1)))
+            (else
+              (tick-world-cell! x y)
+              (loop (+ x 1) y))))))
 
 (define (collide-box-with-world
           old-x old-y
