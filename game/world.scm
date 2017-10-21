@@ -2,42 +2,47 @@
 
 (define color-world-wall-1 (al:make-color-rgb 170 170 170))
 
-(define world-width  20)
-(define world-height 12)
 (define world-grid
-  '#(#( 0 0 0 0 1 1 1 1 1 0 0 1 1 1 0 0 0 0 0 0)
+  '#(#( 3 0 0 2 1 1 1 1 1 0 0 1 1 1 2 0 0 0 0 3)
      #( 0 0 0 0 1 1 1 1 1 0 0 1 1 1 0 0 0 0 0 0)
-     #( 0 0 0 0 1 0 0 0 0 0 0 0 0 1 1 1 1 0 0 0)
+     #( 0 0 0 0 1 2 0 0 0 0 0 0 0 1 1 1 1 0 0 0)
      #( 0 0 0 0 1 0 0 0 0 0 0 0 0 1 1 1 1 0 0 0)
      #( 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 0 0 0 0 0 0 0 0 2 2 0 0 0 0 0 0 0 0 0 0)
-     #( 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0)
-     #( 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 0)
-     #( 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 1 0 0 0 0)
-     #( 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0)
-     #( 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0)
+     #( 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 0 0 0 0 0 0 2 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 3 0 0 0 0 0 0 1 0 0 0 0 0 0 2 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      ))
 
+(define world-width
+  (apply max
+         (map vector-length
+              (vector->list world-grid))))
+(define world-height
+  (vector-length world-grid))
+
 (define (world-grid-ref x y)
-  (cond ((<  x 0) 1)
-        ((<  y 0) 1)
-        ((>= x world-width ) 1)
-        ((>= y world-height) 1)
+  (cond ((<  x 0) -1)
+        ((<  y 0) -1)
+        ((>= y (vector-length world-grid)) -1)
         (else
-          (vector-ref
-            (vector-ref world-grid y)
-            x))))
+          (let ((row (vector-ref world-grid y)))
+            (if (>= x (vector-length row))
+              -1
+              (vector-ref row x))))))
 
 (define (world-cell-is-solid-for-player cx cy)
   (case (world-grid-ref cx cy)
-    ((0 2) #f)
+    ((0 2 3) #f)
     (else #t)))
 
 (define (world-point-is-solid-for-particles x y)
   (case (world-grid-ref (floor-quotient (->int x) 16)
                         (floor-quotient (->int y) 16))
-    ((0) #f)
+    ((0 3) #f)
     (else #t)))
 
 (define (draw-world-cell cx cy)
@@ -45,7 +50,7 @@
         (y (* cy 16)))
     ;
     (case (world-grid-ref cx cy)
-      ((0) #f)
+      ((0 3) #f)
       ((1) (al:draw-rectangle/fill
              (+ x  0) (+ y  0)
              (+ x 16) (+ y 16)
@@ -74,14 +79,21 @@
         ))))
 
 (define (draw-world)
-  (let loop ((x 0)
-             (y 0))
-    (cond ((>= y world-height) #f)
-          ((>= x world-width)
-           (loop 0 (+ y 1)))
-          (else
-            (draw-world-cell x y)
-            (loop (+ x 1) y)))))
+  (let* ((visible-x-min (quotient camera-x 16))
+         (visible-y-min (quotient camera-y 16))
+         (visible-x-max (quotient (+ camera-x -1 logical-width)
+                                  16))
+         (visible-y-max (quotient (+ camera-y -1 logical-height -8)
+                                  16)))
+    ;
+    (let loop ((x visible-x-min)
+               (y visible-y-min))
+      (cond ((> y visible-y-max) #f)
+            ((> x visible-x-max)
+             (loop visible-x-min (+ y 1)))
+            (else
+              (draw-world-cell x y)
+              (loop (+ x 1) y))))))
 
 
 (define (tick-world-cell! cx cy)
@@ -100,7 +112,22 @@
              (* 1 1/50 (- (random 101) 50)))
            ;
            )))
-       (else #f))))
+      ((3) ; Enemy spawner
+       (when (= (random 60) 0)
+         (begin
+           (do ((i 10 (- i 1)))
+             ((<= i 0))
+             (add-basic-env-particle!
+               20
+               (+ (* cx 16) 8)
+               (+ (* cy 16) 8)
+               (+ 1 (random 2))
+               (rgba->color   0 255 255 192)
+               (* 2 1/50 (- (random 101) 50))
+               (* 2 1/50 (- (random 101) 50))))
+           ;
+           )))
+      (else #f))))
 
 (define (tick-world!)
   (let loop ((x 0)
@@ -112,7 +139,7 @@
             (tick-world-cell! x y)
             (loop (+ x 1) y)))))
 
-(define (collide-with-world
+(define (collide-box-with-world
           old-x old-y
           new-x new-y
           bx-min by-min
@@ -150,8 +177,8 @@
                (loop (+ cx 1) cy))
               ((world-cell-is-solid-for-player cx cy)
                (set! new-x
-                 (cond ((> cx old-cx-med) (+ (* cx 16) -8))
-                       ((< cx old-cx-med) (+ (* cx 16)  23))
+                 (cond ((> cx old-cx-med) (+ (* cx 16) -1 bx-min))
+                       ((< cx old-cx-med) (+ (* cx 16) 16 bx-max))
                        (else new-x)))
                (loop (+ cx 1) cy))
               (else
@@ -168,8 +195,8 @@
                (loop (+ cx 1) cy))
               ((world-cell-is-solid-for-player cx cy)
                (set! new-y
-                 (cond ((> cy old-cy-med) (+ (* cy 16) -8))
-                       ((< cy old-cy-med) (+ (* cy 16)  23))
+                 (cond ((> cy old-cy-med) (+ (* cy 16) -1 by-min))
+                       ((< cy old-cy-med) (+ (* cy 16) 16 by-max))
                        (else new-y)))
                (loop (+ cx 1) cy))
               (else
@@ -196,12 +223,12 @@
                (loop (+ cx 1) cy))
               ((world-cell-is-solid-for-player cx cy)
                (set! new-x
-                 (cond ((> cx old-cx-med) (+ (* cx 16) -8))
-                       ((< cx old-cx-med) (+ (* cx 16)  23))
+                 (cond ((> cx old-cx-med) (+ (* cx 16) -1 bx-min))
+                       ((< cx old-cx-med) (+ (* cx 16) 16 bx-max))
                        (else new-x)))
                (set! new-y
-                 (cond ((> cy old-cy-med) (+ (* cy 16) -8))
-                       ((< cy old-cy-med) (+ (* cy 16)  23))
+                 (cond ((> cy old-cy-med) (+ (* cy 16) -1 by-min))
+                       ((< cy old-cy-med) (+ (* cy 16) 16 by-max))
                        (else new-y)))
                (loop (+ cx 1) cy))
               (else

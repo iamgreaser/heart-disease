@@ -26,7 +26,7 @@
     ;; Physics checks
     (call-with-values
       (lambda ()
-        (collide-with-world
+        (collide-box-with-world
           old-x old-y
           new-x new-y
           -7 -7 7 7))
