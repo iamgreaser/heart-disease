@@ -1,5 +1,10 @@
 ;; vim: set sts=2 sw=2 et lisp sm syntax= :
 
+(define (rgba->color r g b a)
+  (apply al:make-color-rgba
+         (map (lambda (n) (->int (* n a 1/255)))
+              `(,r ,g ,b 255))))
+
 (define color-heart (al:make-color-rgb 255  32  64))
 
 (define color-black      (al:make-color-rgb   0   0   0))

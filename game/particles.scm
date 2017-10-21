@@ -13,6 +13,23 @@
             ,x ,y ,radius ,color
             ,dx ,dy)))
 
+(define (add-basic-env-particle!
+          timeout
+          x y radius color
+          dx dy)
+  (add-particle!
+    `(basic-env ,timeout
+                ,x ,y ,radius ,color
+                ,dx ,dy)))
+
+
+(define (tick-basic-env-particle!
+          args
+          x y radius color dx dy)
+  (set-car!      args  (+ x dx))
+  (set-car! (cdr args) (+ y dy))
+  args)
+
 
 (define (tick-basic-particle!
           args
@@ -22,6 +39,15 @@
   (cond ((world-point-is-solid-for-particles x y) #f)
         (else args)))
 
+(define (tick-particle-with! fn particle args)
+  (begin
+    (set! args
+      (apply fn (cons args args)))
+    (if args
+      (begin
+        (set-cdr! (cdr particle) args)
+        particle)
+      #f)))
 
 (define (tick-particle! particle)
   (let ((type       (car  particle))
@@ -33,15 +59,13 @@
       (set-car! (cdr particle)    timeout)
       (cond ((< timeout 0) #f)
             ((eq? type 'basic)
-             (begin
-               (set! args
-                 (apply tick-basic-particle!
-                      (cons args args)))
-               (if args
-                 (begin
-                   (set-cdr! (cdr particle) args)
-                   particle)
-                 #f)))
+             (tick-particle-with!
+               tick-basic-particle!
+               particle args))
+            ((eq? type 'basic-env)
+             (tick-particle-with!
+               tick-basic-env-particle!
+               particle args))
             (else
               (error
                 (string-append

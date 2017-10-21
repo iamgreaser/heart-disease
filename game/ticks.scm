@@ -38,6 +38,7 @@
 
 (define (handle-physics!)
   (player-tick-movement!)
+  (tick-world!)
   (tick-particles!))
 
 
@@ -66,21 +67,6 @@
 
   (al:clear-to-color
     (al:make-color-rgb  85  85  85))
-
-  ;; This is actually a test.
- ;(draw-heart (* logical-width  1/2)
- ;            (* logical-height 1/2)
- ;            (* logical-height 1/2 0.4
- ;               (exp (* 0.1
- ;                       (sin (* pi 2
- ;                               (current-milliseconds) 1/1000
- ;                               1/1))))))
-
- ;(draw-heart (+ (* logical-width  1/2)
- ;               (* logical-height 1/2 -7/8))
- ;            (+ (* logical-height 1/2)
- ;               (* logical-height 1/2  0/1))
- ;            (* logical-height 1/2 0.2))
 
   ;; World
   (draw-world)

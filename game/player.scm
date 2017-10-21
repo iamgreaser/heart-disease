@@ -24,96 +24,17 @@
         (set! new-y (+ new-y player-movement-speed))))
 
     ;; Physics checks
-    (let* ((old-cx-med (floor-quotient old-x 16))
-           (old-cy-med (floor-quotient old-y 16))
-           (old-cx-min (floor-quotient (+ old-x -7) 16))
-           (old-cy-min (floor-quotient (+ old-y -7) 16))
-           (old-cx-max (floor-quotient (+ old-x  7) 16))
-           (old-cy-max (floor-quotient (+ old-y  7) 16))
-           (new-cx-min (floor-quotient (+ new-x -7) 16))
-           (new-cy-min (floor-quotient (+ new-y -7) 16))
-           (new-cx-max (floor-quotient (+ new-x  7) 16))
-           (new-cy-max (floor-quotient (+ new-y  7) 16)))
-
-      ;; Skip if the cells are the same
-      (unless (and (= old-cx-min new-cx-min)
-                   (= old-cy-min new-cy-min)
-                   (= old-cx-max new-cx-max)
-                   (= old-cy-max new-cy-max))
-        ;; Check the whole box
-        ;; Do X and Y separately first
-        ;; FIXME: needs a raycast
-        (let loop ((cx new-cx-min)
-                   (cy old-cy-min))
-          (cond ((> cy old-cy-max) #f)
-                ((> cx new-cx-max)
-                 (loop new-cx-min (+ cy 1)))
-                ((and (>= cx old-cx-min)
-                      (>= cy old-cy-min)
-                      (<= cx old-cx-max)
-                      (<= cy old-cy-max))
-                 (loop (+ cx 1) cy))
-                ((world-cell-is-solid-for-player cx cy)
-                 (set! new-x
-                   (cond ((> cx old-cx-med) (+ (* cx 16) -8))
-                         ((< cx old-cx-med) (+ (* cx 16)  23))
-                         (else new-x)))
-                 (loop (+ cx 1) cy))
-                (else
-                  (loop (+ cx 1) cy))))
-        (let loop ((cx old-cx-min)
-                   (cy new-cy-min))
-          (cond ((> cy new-cy-max) #f)
-                ((> cx old-cx-max)
-                 (loop old-cx-min (+ cy 1)))
-                ((and (>= cx old-cx-min)
-                      (>= cy old-cy-min)
-                      (<= cx old-cx-max)
-                      (<= cy old-cy-max))
-                 (loop (+ cx 1) cy))
-                ((world-cell-is-solid-for-player cx cy)
-                 (set! new-y
-                   (cond ((> cy old-cy-med) (+ (* cy 16) -8))
-                         ((< cy old-cy-med) (+ (* cy 16)  23))
-                         (else new-y)))
-                 (loop (+ cx 1) cy))
-                (else
-                  (loop (+ cx 1) cy)))))
-
-      ;; Now do diagonals
-      (unless (and (= old-cx-min new-cx-min)
-                   (= old-cy-min new-cy-min)
-                   (= old-cx-max new-cx-max)
-                   (= old-cy-max new-cy-max))
-        (set! new-cx-min (floor-quotient (+ new-x -7) 16))
-        (set! new-cy-min (floor-quotient (+ new-y -7) 16))
-        (set! new-cx-max (floor-quotient (+ new-x  7) 16))
-        (set! new-cy-max (floor-quotient (+ new-y  7) 16))
-        (let loop ((cx new-cx-min)
-                   (cy new-cy-min))
-          (cond ((> cy new-cy-max) #f)
-                ((> cx new-cx-max)
-                 (loop new-cx-min (+ cy 1)))
-                ((and (>= cx old-cx-min)
-                      (>= cy old-cy-min)
-                      (<= cx old-cx-max)
-                      (<= cy old-cy-max))
-                 (loop (+ cx 1) cy))
-                ((world-cell-is-solid-for-player cx cy)
-                 (set! new-x
-                   (cond ((> cx old-cx-med) (+ (* cx 16) -8))
-                         ((< cx old-cx-med) (+ (* cx 16)  23))
-                         (else new-x)))
-                 (set! new-y
-                   (cond ((> cy old-cy-med) (+ (* cy 16) -8))
-                         ((< cy old-cy-med) (+ (* cy 16)  23))
-                         (else new-y)))
-                 (loop (+ cx 1) cy))
-                (else
-                  (loop (+ cx 1) cy)))))
-
-      (set! player-x new-x)
-      (set! player-y new-y))
+    (call-with-values
+      (lambda ()
+        (collide-with-world
+          old-x old-y
+          new-x new-y
+          -7 -7 7 7))
+      (lambda (x y)
+        (set! new-x    x)
+        (set! new-y    y)
+        (set! player-x x)
+        (set! player-y y)))
 
     ;; Actually fire stuff
     (let* ((fire-delta-x    (- input-mouse-x player-x))
