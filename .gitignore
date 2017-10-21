@@ -1,0 +1,6 @@
+# VIM
+.*.swp
+
+# screenshots
+var/*/*.png
+
