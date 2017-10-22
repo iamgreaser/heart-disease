@@ -13,6 +13,15 @@
             ,x ,y ,radius ,color
             ,dx ,dy (die-on-world))))
 
+(define (add-basic-particle*!
+          timeout
+          x y radius color
+          dx dy attribs)
+  (add-particle!
+    `(basic ,timeout
+            ,x ,y ,radius ,color
+            ,dx ,dy ,attribs)))
+
 (define (add-basic-env-particle!
           timeout
           x y radius color
@@ -43,6 +52,21 @@
       (when (member 'die-on-world attribs)
         (when (world-point-is-solid-for-particles x y)
           (ret #f)))
+      (when (member 'kills-enemies attribs)
+        (let ((hit-something #f))
+          (begin
+            (for-each-mob-at-of
+              (lambda (args
+                        attribs x y
+                        . extra)
+                (set! hit-something #t)
+                (set-car! args (cons 'dead attribs))
+                (ret #f))
+              x y
+              (+ 7 radius)
+              'enemy-1)
+            (when hit-something
+              (ret #f)))))
       args)))
 
 (define (tick-particle-with! fn particle args)

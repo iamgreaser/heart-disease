@@ -59,17 +59,19 @@
                                   (* fire-dir-y speed  1 (sin angle))))
                    (velocity-y (+ (* fire-dir-y speed  1 (cos angle))
                                   (* fire-dir-x speed -1 (sin angle)))))
-              (add-basic-particle!
+              (add-basic-particle*!
                 60
                 player-x player-y 
                 radius color-white
                 (* velocity-x 0.7)
-                (* velocity-y 0.7))
-              (add-basic-particle!
+                (* velocity-y 0.7)
+                '(die-on-world kills-enemies))
+              (add-basic-particle*!
                 60
                 player-x player-y 
                 radius color-white
-                velocity-x velocity-y)))))
+                velocity-x velocity-y
+                '(die-on-world kills-enemies))))))
       )
 
     ;

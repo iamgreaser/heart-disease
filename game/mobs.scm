@@ -64,6 +64,7 @@
       (set!     timeout        (- timeout 1))
       (set-car! (cdr mob)    timeout)
       (cond ((< timeout 0) #f)
+            ((memv 'dead (car args)) #f)
             ((eq? type 'enemy-1)
              (tick-mob-with!
                tick-enemy-1-mob!
@@ -104,4 +105,19 @@
     ((null? p))
     (apply draw-mob (cdr (car p)))))
 
+
+(define (for-each-mob-at-of fn point-x point-y radius mob-type)
+  (let ((radius2 (* radius radius)))
+    (do ((p mob-list (cdr p)))
+      ((null? p))
+      (let* ((mob-x   (car (cdddr  (car p))))
+             (mob-y   (car (cddddr (car p))))
+             (delta-x (- mob-x point-x))
+             (delta-y (- mob-y point-y))
+             (dist2   (+ (* delta-x delta-x)
+                         (* delta-y delta-y))))
+        (when (and (<= dist2 radius2)
+                   (eq? mob-type (caar p)))
+          (apply fn (cons (cddr (car p))
+                          (cddr (car p)))))))))
 
