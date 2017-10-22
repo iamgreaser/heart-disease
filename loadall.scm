@@ -7,6 +7,8 @@
     (d move-right)
     (w move-up)
     (s move-down)
+
+    (p pause)
     
     (f12 take-screenshot)))
 
@@ -24,7 +26,12 @@
   (thread-sleep! 1/60)
 
   (handle-input!)
-  (handle-physics!)
+  (when (member 'pause inputs-new)
+    (unless (member 'pause inputs-old)
+      (set! pause-enabled-flag
+        (not pause-enabled-flag))))
+  (unless pause-enabled-flag
+    (handle-physics!))
   (handle-drawing!)
 
   ;(print "hi")

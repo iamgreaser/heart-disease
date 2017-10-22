@@ -99,13 +99,25 @@
                        (/ display-width  logical-width)
                        (/ display-height logical-height))
   (al:transform-use (al:current-transform))
-  (al:draw-rectangle/fill 0 192 logical-width logical-height color-black)
+  (al:draw-rectangle/fill
+    0 (- logical-height 8)
+    logical-width logical-height
+    color-black)
   (do ((i 3 (- i 1)))
     ((<= i 0))
     ;
     (draw-heart (+ 6 (* (- i 1) 10))
                 (- logical-height 3)
                 5))
+
+  ;; Pause mode
+  (when pause-enabled-flag
+    (begin
+      (al:draw-rectangle/fill
+        0 0
+        logical-width
+        logical-height
+        (rgba->color 0 0 0 170))))
 
   ;; Last moment to screenshot
   (when (memv 'take-screenshot inputs-new)
