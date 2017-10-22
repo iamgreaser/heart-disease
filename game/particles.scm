@@ -141,23 +141,20 @@
           particle-list)))))
 
 
-
-(define (draw-particle x y radius color . extra)
+(define (draw-particle timeout x y radius color . extra)
   (when (and (>= x (- camera-x radius))
              (>= y (- camera-y radius))
              (<= x (+ camera-x logical-width     radius))
              (<= y (+ camera-y logical-height -8 radius)))
-    (al:draw-circle/fill
-      x y radius color)))
-
-(define (draw-particles)
-  (do ((p particle-list (cdr p)))
-    ((null? p))
-    (apply draw-particle (cddr (car p)))))
+    (let ((scale (min 1.0 (* timeout 1/10))))
+      (al:draw-circle/fill
+        x y
+        (* radius scale)
+        color))))
 
 (define (draw-particles)
   (let ((fn (lambda (particle)
-              (apply draw-particle (cddr particle)))))
+              (apply draw-particle (cdr particle)))))
     (kd-tree-for-each-node-in
       fn
       (list (+ camera-x -20)

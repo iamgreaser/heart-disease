@@ -17,7 +17,7 @@
 
 ;; Runtime stuff
 (define player-x 160)
-(define player-y 100)
+(define player-y  10)
 (define particle-list    '())
 (define particle-kd-tree '(empty))
 (define mob-list         '())

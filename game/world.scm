@@ -2,7 +2,7 @@
 
 (define color-world-wall-1 (al:make-color-rgb 170 170 170))
 
-(define world-grid
+(define world-grid-template
   '#(#( 0 0 0 2 1 1 1 0 0 0 0 1 1 1 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 0 0 0 0 1 1 1 0 0 0 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 0 0 0 0 1 2 0 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
@@ -33,6 +33,37 @@
      #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      ))
+
+(define (clone-world)
+  (let* ((grid (make-vector
+                 (vector-length
+                   world-grid-template))))
+    (do ((y 0 (+ y 1)))
+      ((>= y (vector-length grid)) grid)
+      (vector-set!
+        grid y
+        (let* (( in-row (vector-ref
+                          world-grid-template
+                          y))
+               (out-row (make-vector
+                          (vector-length
+                            in-row))))
+          (do ((x 0 (+ x 1)))
+            ((>= x (vector-length in-row))
+             out-row)
+            (vector-set!
+              out-row x
+              (vector-ref in-row x))))))))
+
+(define world-grid (clone-world))
+
+(define (new-game!)
+  (set! player-x 160)
+  (set! player-y  10)
+  (set! particle-list    '())
+  (set! particle-kd-tree '(empty))
+  (set! mob-list         '())
+  (set! mob-kd-tree      '(empty)))
 
 (define world-width
   (apply max

@@ -95,22 +95,23 @@
         mob-list))))
 
 
-(define (draw-mob type attribs x y . extra)
-  (al:draw-triangle/fill
-    (+ x -6) (+ y -6)
-    (+ x  6) (+ y -6)
-    (+ x  0) (+ y  6)
-    (al:make-color-rgb  32 190  32))
-  (al:draw-triangle
-    (+ x -6) (+ y -6)
-    (+ x  6) (+ y -6)
-    (+ x  0) (+ y  6)
-    color-black
-    1.0))
+(define (draw-mob type timeout attribs x y . extra)
+  (let ((scale (min 1.0 (* timeout 1/10))))
+    (al:draw-triangle/fill
+      (+ x (* scale -6)) (+ y (* scale -6))
+      (+ x (* scale  6)) (+ y (* scale -6))
+      (+ x (* scale  0)) (+ y (* scale  6))
+      (al:make-color-rgb  32 190  32))
+    (al:draw-triangle
+      (+ x (* scale -6)) (+ y (* scale -6))
+      (+ x (* scale  6)) (+ y (* scale -6))
+      (+ x (* scale  0)) (+ y (* scale  6))
+      color-black
+      1.0)))
 
 (define (draw-mobs)
   (let ((fn (lambda (mob)
-              (apply draw-mob (cdr mob)))))
+              (apply draw-mob mob))))
     (kd-tree-for-each-node-in
       fn
       `(,(+ camera-x -2 -7)
