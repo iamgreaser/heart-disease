@@ -4,7 +4,8 @@
   (inexact->exact (floor n)))
 
 (define (floor-quotient n d)
-  (quotient (- n (modulo n d)) d))
+  (let ((n (->int n)))
+    (quotient (- n (modulo n d)) d)))
 
 (define (ceil-quotient n d)
   (+ (floor/ n d)

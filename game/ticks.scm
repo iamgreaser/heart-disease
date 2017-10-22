@@ -53,6 +53,7 @@
 (define (handle-physics!)
   (player-tick-movement!)
   (tick-world!)
+  (tick-mobs!)
   (tick-particles!)
   (tick-camera!))
 
@@ -86,13 +87,10 @@
   (al:clear-to-color
     (al:make-color-rgb  85  85  85))
 
-  ;; World
+  ;; Game world stuff
   (draw-world)
-
-  ;; Player
   (draw-player player-x player-y)
-
-  ;; Particles
+  (draw-mobs)
   (draw-particles)
 
   ;; Bottom bar

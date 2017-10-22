@@ -19,6 +19,7 @@
 (define player-x 160)
 (define player-y 100)
 (define particle-list '())
+(define mob-list      '())
 (define camera-x 0)
 (define camera-y 0)
 

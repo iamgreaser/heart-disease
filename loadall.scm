@@ -14,6 +14,7 @@
   `((1 fire)))
 
 (load "game/draws.scm")
+(load "game/mobs.scm")
 (load "game/particles.scm")
 (load "game/player.scm")
 (load "game/ticks.scm")
