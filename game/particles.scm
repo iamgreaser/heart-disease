@@ -43,31 +43,52 @@
 
 (define (tick-basic-particle!
           args
-          x y radius color dx dy
+          old-x old-y radius color dx dy
           attribs)
-  (set-car!      args  (+ x dx))
-  (set-car! (cdr args) (+ y dy))
-  (call/cc
-    (lambda (ret)
-      (when (member 'die-on-world attribs)
-        (when (world-point-is-solid-for-particles x y)
-          (ret #f)))
-      (when (member 'kills-enemies attribs)
-        (let ((hit-something #f))
-          (begin
-            (for-each-mob-at-of
-              (lambda (args
-                        attribs x y
-                        . extra)
-                (set! hit-something #t)
-                (set-car! args (cons 'dead attribs))
-                (ret #f))
-              x y
-              (+ 7 radius)
-              'enemy-1)
-            (when hit-something
-              (ret #f)))))
-      args)))
+  (let* ((new-x (+ old-x dx))
+         (new-y (+ old-y dy)))
+    ;
+    (dynamic-wind
+      (lambda () #f)
+      (lambda ()
+        (call/cc
+          (lambda (ret)
+            (when (member 'die-on-world attribs)
+              (when (world-point-is-solid-for-particles new-x new-y)
+                (ret #f)))
+            (when (member 'collide-with-world attribs)
+              (when (world-point-is-solid-for-particles new-x new-y)
+                (let ((speed-mul (* -1/1000 (random 100))))
+                  (begin
+                    (set! new-x old-x)
+                    (set! new-y old-y)
+                    (set-car!      (cddddr args)  (* dx speed-mul))
+                    (set-car! (cdr (cddddr args)) (* dy speed-mul))))))
+            (when (member 'kills-enemies attribs)
+              (begin
+                (for-each-mob-at-of
+                  (lambda (args attribs new-x new-y . extra)
+                    (set-car! args (cons 'dead attribs))
+                    (do ((i 5 (- i 1)))
+                      ((<= i 0))
+                      (add-basic-particle*!
+                        (+ 60 (random 30))
+                        new-x new-y (+ 1 (random 3))
+                        (al:make-color-rgb
+                          (+ (random 128) 64)
+                          (+ (random 128) 64)
+                          0)
+                        (+ dx (* 0.2 (* (random 41) 1/10) -2))
+                        (+ dy (* 0.2 (* (random 41) 1/10) -2))
+                        '(collide-with-world)))
+                    (ret #f))
+                  new-x new-y
+                  (+ 7 radius)
+                  'enemy-1)))
+            args)))
+      (lambda ()
+        (set-car!      args  new-x)
+        (set-car! (cdr args) new-y)))))
 
 (define (tick-particle-with! fn particle args)
   (begin
@@ -100,19 +121,25 @@
 
 
 (define (tick-particles!)
-  (set! particle-list
-    (let loop ((p particle-list))
-      (if (null? p)
-        '()
-        (let ((result (tick-particle! (car p))))
-          (if result
-            (cons result (loop (cdr p)))
-            (loop (cdr p))))))))
+  (let ((old-particle-list particle-list))
+    (set! particle-list '())
+    (set! particle-list
+      (let loop ((p old-particle-list))
+        (if (null? p)
+          particle-list
+          (let ((result (tick-particle! (car p))))
+            (if result
+              (cons result (loop (cdr p)))
+              (loop (cdr p)))))))))
 
 
 (define (draw-particle x y radius color . extra)
-  (al:draw-circle/fill
-    x y radius color))
+  (when (and (>= x (- camera-x radius))
+             (>= y (- camera-y radius))
+             (<= x (+ camera-x logical-width     radius))
+             (<= y (+ camera-y logical-height -8 radius)))
+    (al:draw-circle/fill
+      x y radius color)))
 
 (define (draw-particles)
   (do ((p particle-list (cdr p)))
