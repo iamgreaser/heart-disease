@@ -86,7 +86,7 @@
             (if result
               (cons result (loop (cdr p)))
               (loop (cdr p)))))))
-    '(set! mob-kd-tree
+    (set! mob-kd-tree
       (kd-tree-new
         (lambda (n)
           (let ((pt (cdddr n)))
@@ -109,15 +109,23 @@
     1.0))
 
 (define (draw-mobs)
-  (do ((p mob-list (cdr p)))
-    ((null? p))
-    (apply draw-mob (cdr (car p)))))
+  (let ((fn (lambda (mob)
+              (apply draw-mob (cdr mob)))))
+    (kd-tree-for-each-node-in
+      fn
+      `(,(+ camera-x -2 -7)
+        ,(+ camera-y -2 -7))
+      `(,(+ camera-x  2  7 logical-width)
+        ,(+ camera-y  2  7 logical-height -8))
+      mob-kd-tree)
+    ;(for-each fn mob-list)
+    ))
 
 
 ;;;
 ;;; KD-TREE VERSION
 ;;;
-'(define (for-each-mob-at-of fn point-x point-y radius mob-type)
+(define (for-each-mob-at-of fn point-x point-y radius mob-type)
   (let ((radius2 (* radius radius)))
     (let ((fn (lambda (mob)
                 (let* ((mob-x   (car (cdddr  mob)))
@@ -132,8 +140,8 @@
                                     (cddr mob))))))))
       (kd-tree-for-each-node-in
         fn
-        `(,(- radius) ,(- radius))
-        `(,(+ radius) ,(+ radius))
+        `(,(- point-x radius) ,(- point-y radius))
+        `(,(+ point-x radius) ,(+ point-y radius))
         mob-kd-tree)
       ;;(for-each fn mob-list)
       )))
@@ -141,7 +149,7 @@
 ;;;
 ;;; NAIVE VERSION
 ;;;
-(define (for-each-mob-at-of fn point-x point-y radius mob-type)
+'(define (for-each-mob-at-of fn point-x point-y radius mob-type)
   (let ((radius2 (* radius radius)))
     (do ((p mob-list (cdr p)))
       ((null? p))

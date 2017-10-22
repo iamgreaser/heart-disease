@@ -122,15 +122,24 @@
 
 (define (tick-particles!)
   (let ((old-particle-list particle-list))
-    (set! particle-list '())
-    (set! particle-list
-      (let loop ((p old-particle-list))
-        (if (null? p)
-          particle-list
-          (let ((result (tick-particle! (car p))))
-            (if result
-              (cons result (loop (cdr p)))
-              (loop (cdr p)))))))))
+    (begin
+      (set! particle-list '())
+      (set! particle-list
+        (let loop ((p old-particle-list))
+          (if (null? p)
+            particle-list
+            (let ((result (tick-particle! (car p))))
+              (if result
+                (cons result (loop (cdr p)))
+                (loop (cdr p)))))))
+      (set! particle-kd-tree
+        (kd-tree-new
+          (lambda (n)
+            (let ((pt (cddr n)))
+              `(,(car  pt)
+                ,(cadr pt))))
+          particle-list)))))
+
 
 
 (define (draw-particle x y radius color . extra)
@@ -145,4 +154,17 @@
   (do ((p particle-list (cdr p)))
     ((null? p))
     (apply draw-particle (cddr (car p)))))
+
+(define (draw-particles)
+  (let ((fn (lambda (particle)
+              (apply draw-particle (cddr particle)))))
+    (kd-tree-for-each-node-in
+      fn
+      (list (+ camera-x -20)
+            (+ camera-y -20))
+      (list (+ camera-x  20 logical-width)
+            (+ camera-y  20 logical-height -8))
+      particle-kd-tree)
+    ;(for-each fn particle-list)
+    ))
 

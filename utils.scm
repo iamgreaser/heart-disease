@@ -27,12 +27,10 @@
 ;;; `(bucket ,real-nodes)
 ;;; `(empty)
 
-(define (kd-tree-new node->space
-                     ops)
+(define (kd-tree-new node->space ops)
   (let* ((source (map (lambda (n)
                         (cons (node->space n) n))
                       ops)))
-
     (kd-tree-split-node-recursive source)))
 
 (define (kd-tree-split-node-recursive source)
@@ -44,73 +42,34 @@
 
 (define (kd-tree-split-node-recursive-force source)
   ;(pp source)
-  (let* ((x-min (apply min (map (lambda (n) (caar  n)) source)))
-         (x-max (apply max (map (lambda (n) (caar  n)) source)))
-         (y-min (apply min (map (lambda (n) (cadar n)) source)))
-         (y-max (apply max (map (lambda (n) (cadar n)) source)))
-         (x-len (- x-max x-min))
-         (y-len (- y-max y-min))
-         (left-node   '())
-         (right-node  '())
-         (split-axis   #f)
-         (split-ref    #f)
-         (split-sorted #f)
-         (split-median #f))
+  (let* ((x-min (apply min (map (lambda (n) (list-ref (car n) 0)) source)))
+         (x-max (apply max (map (lambda (n) (list-ref (car n) 0)) source)))
+         (y-min (apply min (map (lambda (n) (list-ref (car n) 1)) source)))
+         (y-max (apply max (map (lambda (n) (list-ref (car n) 1)) source)))
 
-    ;; Work out axis to split by
-    (cond ((>= x-len y-len) (set! split-axis 0)
-                            (set! split-ref
-                              (lambda (n)
-                                (car  (car n)))))
-          (else             (set! split-axis 1)
-                            (set! split-ref
-                              (lambda (n)
-                                (cadr (car n))))))
+         ;; Find axis to split by
+         (x-len        (- x-max x-min))
+         (y-len        (- y-max y-min))
+         (split-axis   (cond ((>= x-len y-len) 0)
+                             (else             1)))
+         (split-ref    (lambda (n)
+                         (list-ref (car n) split-axis)))
 
-    ;; Get the median
-    (set! split-sorted (sort (map split-ref source) <))
-    (set! split-median
-      (list-ref split-sorted
-                (quotient (length split-sorted) 2)))
+         ;; Sort and split
+         (split-sorted (sort source
+                             (lambda (a b)
+                               (< (split-ref a)
+                                  (split-ref b)))))
+         (split-centre (quotient (length split-sorted) 2))
+         (left-node    (take split-sorted split-centre))
+         (right-node   (drop split-sorted split-centre))
 
-    ;; Split list into nodes
-    (do ((p source (cdr p)))
-      ((null? p))
-      (if (>= (split-ref (car p))
-              split-median)
-        (set! right-node (cons (car p) right-node))
-        (set! left-node  (cons (car p) left-node ))))
+         ;; Get median
+         (split-median (split-ref (car right-node))))
 
-    ;; Handle nasty edge case:
-    ;; If we only have two nodes on exactly the same point,
-    ;; left will be empty.
-    (when (= (length left-node) 0)
-      (set! right-node
-        (let loop ((p right-node))
-          (cond ((= split-median (split-ref (car p)))
-                 (set! left-node (cons (car p) left-node))
-                 (cdr p))
-                ((null? (cdr p))
-                 (set! left-node (cons (car p) left-node))
-                 (cdr p))
-                (else
-                 (cons (car p)
-                       (loop (cdr p))))))))
-
-    ;; This should never happen,
-    ;; but we can still be prepared for it
-    (when (= (length right-node) 0)
-      (set! left-node
-        (let loop ((p left-node))
-          (cond ((= split-median (split-ref (car p)))
-                 (set! right-node (cons (car p) right-node))
-                 (cdr p))
-                ((null? (cdr p))
-                 (set! right-node (cons (car p) right-node))
-                 (cdr p))
-                (else
-                 (cons (car p)
-                       (loop (cdr p))))))))
+    '(pp `(,(split-ref (car left-node))
+          ,split-median
+          ,(split-ref (car right-node))))
 
     ;; Create split node!
     `(split ,split-axis
@@ -118,33 +77,36 @@
             ,(kd-tree-split-node-recursive left-node)
             ,(kd-tree-split-node-recursive right-node))))
 
+
 (define (kd-tree-for-each-node-in
-          fn
-          b-min b-max
-          tree)
+          fn b-min b-max tree)
+  ;(pp `(,b-min ,b-max))
   (case (car tree)
 
     ;; split: Work out which splits we might cover
     ((split)
-     (let* ((axis   (cadr tree))
-            (median (caddr tree))
-            (nodes  (cdddr tree))
-            (p-min  (list-ref b-min axis))
-            (p-max  (list-ref b-max axis)))
+     (let* ((split-axis   (cadr  tree))
+            (split-median (caddr tree))
+            (nodes        (cdddr tree))
+            (left-node    (car  nodes))
+            (right-node   (cadr nodes))
+            (axial-min    (list-ref b-min split-axis))
+            (axial-max    (list-ref b-max split-axis)))
 
+       ;(pp `(,p-min ,p-max ,split-axis ,split-median))
        ;; Select possible splits
-       (when #t;(<= p-min median)
+       (when (<= axial-min split-median)
          (kd-tree-for-each-node-in
-           fn b-min b-max (car  nodes)))
-       (when #t;(>= p-max median)
+           fn b-min b-max left-node))
+       (when (>= axial-max split-median)
          (kd-tree-for-each-node-in
-           fn b-min b-max (cadr nodes)))))
+           fn b-min b-max right-node))))
 
     ;; bucket: Do all applicable nodes
     ((bucket)
-     (do ((p (cadr tree) (cdr p)))
-       ((null? p))
-       (fn (cdr (car p)))))
+     (for-each
+       (lambda (n) (fn (cdr n)))
+       (cadr tree)))
 
     ;; empty: Do nothing
     ((empty) #f)

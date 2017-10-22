@@ -18,9 +18,10 @@
 ;; Runtime stuff
 (define player-x 160)
 (define player-y 100)
-(define particle-list '())
-(define mob-list      '())
-(define mob-kd-tree   '())
+(define particle-list    '())
+(define particle-kd-tree '(empty))
+(define mob-list         '())
+(define mob-kd-tree      '(empty))
 (define camera-x 0)
 (define camera-y 0)
 (define pause-enabled-flag #f)
