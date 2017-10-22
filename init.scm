@@ -20,6 +20,7 @@
 (define player-y 100)
 (define particle-list '())
 (define mob-list      '())
+(define mob-kd-tree   '())
 (define camera-x 0)
 (define camera-y 0)
 

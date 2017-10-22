@@ -6,6 +6,7 @@
 
 ;; Initialise Allegro
 (use (prefix allegro al:))
+(use extras)
 (al:init)
 (al:image-addon-install)
 (al:keyboard-addon-install)

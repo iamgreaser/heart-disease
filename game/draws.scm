@@ -1,5 +1,8 @@
 ;; vim: set sts=2 sw=2 et lisp sm syntax= :
 
+;; UNCOMMENT WHEN COMPILING
+;(use (prefix allegro al:))
+
 (define (rgba->color r g b a)
   (apply al:make-color-rgba
          (map (lambda (n) (->int (* n a 1/255)))

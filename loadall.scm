@@ -54,3 +54,6 @@
       ((eq? (thread-state main-thread) 'dead)
        (main-loop-start)))
 
+;; UNCOMMENT WHEN COMPILING
+;(thread-join! main-thread)
+
