@@ -69,10 +69,10 @@
                 (for-each-mob-at-of
                   (lambda (args attribs new-x new-y . extra)
                     (set-car! args (cons 'dead attribs))
-                    (do ((i 5 (- i 1)))
+                    (do ((i 2 (- i 1)))
                       ((<= i 0))
                       (add-basic-particle*!
-                        (+ 60 (random 30))
+                        (+ 30 (random 30))
                         new-x new-y (+ 1 (random 3))
                         (al:make-color-rgb
                           (+ (random 128) 64)
