@@ -34,7 +34,7 @@
      #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      ))
 
-(define (clone-world)
+(define (create-world)
   (let* ((grid (make-vector
                  (vector-length
                    world-grid-template))))
@@ -55,7 +55,7 @@
               out-row x
               (vector-ref in-row x))))))))
 
-(define world-grid (clone-world))
+(define world-grid (create-world))
 
 (define (new-game!)
   (set! player-x 160)

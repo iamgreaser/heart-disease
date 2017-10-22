@@ -80,19 +80,22 @@
 
 (define (draw-player x y)
   ;; Main player graphic
-  (al:draw-rectangle
-    (+ x -7)
-    (+ y -7)
-    (+ x  7)
-    (+ y  7)
-    color-black
-    2.0)
-  (al:draw-rectangle/fill
-    (+ x -7)
-    (+ y -7)
-    (+ x  7)
-    (+ y  7)
-    color-player)
+  (let* ((funk-amp (- (sin (* tau (music-funk-phase)))))
+         (x (+ x (* funk-amp 1.0)))
+         (y (+ y (* funk-amp 3.0))))
+    (al:draw-rectangle
+      (+ x -7)
+      (+ y -7)
+      (+ x  7)
+      (+ y  7)
+      color-black
+      2.0)
+    (al:draw-rectangle/fill
+      (+ x -7)
+      (+ y -7)
+      (+ x  7)
+      (+ y  7)
+      color-player))
 
   ;; Firing direction
   (let* ((fire-delta-x    (- input-mouse-x player-x))

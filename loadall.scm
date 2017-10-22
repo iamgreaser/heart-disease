@@ -15,6 +15,7 @@
 (define input-mouse-button-bindings
   `((1 fire)))
 
+(load "game/audio.scm")
 (load "game/draws.scm")
 (load "game/mobs.scm")
 (load "game/particles.scm")
@@ -33,6 +34,7 @@
   (unless pause-enabled-flag
     (handle-physics!))
   (handle-drawing!)
+  (handle-audio!)
 
   ;(print "hi")
   (cond ((eq? main-thread (current-thread))

@@ -8,7 +8,7 @@
     (quotient (- n (modulo n d)) d)))
 
 (define (ceil-quotient n d)
-  (+ (floor/ n d)
+  (+ (floor-quotient n d)
      (if (= (modulo n d) 0)
        0
        1)))

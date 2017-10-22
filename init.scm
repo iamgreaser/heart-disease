@@ -4,10 +4,12 @@
 
 ;; Constants
 (define pi 3.141592653589793238462643383279502884197169399) ; that'll be enough
+(define tau (* 2.0 pi))
 (define logical-width  320)
 (define logical-height 200)
 
 (define al-display #f)
+(define al-music-stream #f)
 (define main-thread #f)
 
 (define inputs-new '())
