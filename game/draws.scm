@@ -10,9 +10,10 @@
 
 (define color-heart (al:make-color-rgb 255  32  64))
 
-(define color-black      (al:make-color-rgb   0   0   0))
-(define color-white      (al:make-color-rgb 255 255 255))
-(define color-magic-pink (al:make-color-rgb 255   0 255))
+(define color-black        (al:make-color-rgb   0   0   0))
+(define color-white        (al:make-color-rgb 255 255 255))
+(define color-magic-pink   (al:make-color-rgb 255   0 255))
+(define color-wire-charged (al:make-color-rgb   0  85 170))
 
 (define (draw-heart x y size)
   ;; Fill

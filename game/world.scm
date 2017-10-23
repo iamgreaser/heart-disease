@@ -3,35 +3,35 @@
 (define color-world-wall-1 (al:make-color-rgb 170 170 170))
 
 (define world-grid-template
-  '#(#( 0 0 0 2 1 1 1 0 0 0 0 1 1 1 2 + + + + + 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+  '#(#( 0 0 0 h 1 1 1 0 0 0 0 1 1 1 h + + + + + e 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 0 0 0 + 1 1 1 0 0 0 0 1 1 1 0 0 0 0 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 0 0 0 + 1 0 0 0 0 0 0 0 0 1 1 1 1 0 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 0 0 0 + 1 0 0 0 0 0 0 0 0 1 1 1 1 0 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 0 0 0 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 0 0 0 + + + + 0 0 0 0 0 0 0 0 0 0 0 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 1 1 1 1 1 1 + 0 0 0 0 0 0 0 + + + + + 0 0 0 0 0 0 0 0 0 0 0 3 0 0 3 0 0 3 0 0 0)
+     #( 1 1 1 1 1 1 + 0 0 0 0 0 0 0 + + + + + 0 0 0 0 0 0 0 0 0 0 0 e 0 0 e 0 0 e 0 0 0)
      #( 0 0 0 0 0 0 + 0 0 0 0 0 0 0 + 1 0 0 + 0 0 0 0 0 0 0 0 0 0 0 + 0 0 + 0 0 + 0 0 0)
-     #( 0 0 0 + + + + 0 0 0 0 1 0 0 + 1 0 0 + 0 0 0 0 0 0 0 0 0 0 0 + 0 2 + 2 0 + 0 0 0)
-     #( 0 0 0 + 1 1 1 1 0 0 0 0 0 0 + 1 0 0 + 0 0 0 0 0 0 0 0 0 0 0 3 + + 0 + + 3 0 0 0)
-     #( 0 0 + + + + 2 1 0 0 0 0 0 0 + 1 0 0 + 0 0 0 3 0 0 0 0 0 0 0 0 0 2 0 2 0 0 0 0 0)
-     #( 0 0 + 0 0 0 0 1 0 0 0 0 0 0 2 1 0 0 + + + + + 0 0 0 0 0 0 0 0 0 + 0 0 0 0 0 0 0)
-     #( 1 0 + 1 1 1 1 1 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 3 + + 3 + + 3 0 0 0)
-     #( 1 0 3 1 9 9 9 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 1 1 1 1 9 9 1 1 0 0 0 0 0 0 1 1 0 2 + + + 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 9 9 9 9 1 3 0 0 0 0 0 0 1 1 0 0 0 0 + 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 1 1 1 1 1 0 0 0 0 0 0 0 1 1 1 1 1 1 + 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 1 9 9 9 9 1 + 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 0 0 0 + + + + 0 0 0 0 1 0 0 + 1 0 0 + 0 0 0 0 0 0 0 0 0 0 0 + + h + h + + 0 0 0)
+     #( 0 0 0 + 1 1 1 1 0 0 0 0 0 0 + 1 0 0 + 0 0 0 0 0 0 0 0 0 0 0 e + + + + + e 0 0 0)
+     #( 0 0 + + + + h 1 0 0 0 0 0 0 + 1 0 0 + 0 0 0 e 0 0 0 0 0 0 0 0 0 h + h 0 0 0 0 0)
+     #( 0 0 + 0 0 0 0 1 0 0 0 0 0 0 h 1 0 0 + + + + + 0 0 0 0 0 0 0 0 0 + + + 0 0 0 0 0)
+     #( 1 0 + 1 1 1 1 1 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 e + + e + + e 0 0 0)
+     #( 1 0 e 1 9 9 9 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 1 1 1 1 9 9 1 1 0 0 0 0 0 0 1 1 0 h + + + 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 9 9 9 9 9 9 1 e 0 0 0 0 0 0 1 1 0 0 0 0 + 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 9 9 1 1 1 1 1 + 0 0 0 0 0 0 1 1 1 1 1 1 + 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 9 9 1 h + + + + 0 0 0 0 0 0 1 9 9 9 9 1 + 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 1 9 9 9 9 1 + 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 1 9 9 9 9 1 + 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 9 1 + 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 9 1 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 9 1 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 9 1 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 9 1 e 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 9 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 1 0 0 3 3 3 3 3 3 3 3 0 0 0 0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 1 0 0 0 0 + 0 0 + 0 0 0 0 0 0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 1 0 0 0 0 2 0 0 2 0 0 0 0 0 0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 9 9 1 0 0 e e e e e e e e 0 0 0 0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 9 9 1 0 0 + + + + + + + + 0 0 0 0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 9 9 1 0 0 0 0 h 0 0 h 0 0 0 0 0 0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      ))
 
 (define (create-world)
@@ -55,7 +55,29 @@
               out-row x
               (vector-ref in-row x))))))))
 
-(define world-grid (create-world))
+(define (clone-world in-grid)
+  (let* ((grid (make-vector
+                 (vector-length
+                   in-grid))))
+    (do ((y 0 (+ y 1)))
+      ((>= y (vector-length grid)) grid)
+      (vector-set!
+        grid y
+        (let* (( in-row (vector-ref
+                          in-grid
+                          y))
+               (out-row (make-vector
+                          (vector-length
+                            in-row))))
+          (do ((x 0 (+ x 1)))
+            ((>= x (vector-length in-row))
+             out-row)
+            (vector-set!
+              out-row x
+              (vector-ref in-row x))))))))
+
+(define world-grid      (create-world))
+(define world-grid-next (clone-world world-grid))
 
 (define (new-game!)
   (set! player-x 160)
@@ -72,6 +94,13 @@
 (define world-height
   (vector-length world-grid))
 
+
+(define (world-grid-swap!)
+  (let ((temp world-grid))
+    (set! world-grid      world-grid-next)
+    (set! world-grid-next temp)))
+
+
 (define (world-grid-ref x y)
   (cond ((<  x 0) 9)
         ((<  y 0) 9)
@@ -82,27 +111,62 @@
               9
               (vector-ref row x))))))
 
+(define (world-grid-set! x y cell)
+  (cond ((<  x 0) #f)
+        ((<  y 0) #f)
+        ((>= y (vector-length world-grid-next)) #f)
+        (else
+          (let ((row (vector-ref world-grid-next y)))
+            (if (>= x (vector-length row))
+              #f
+              (begin
+                (vector-set! row x cell)
+                #t))))))
+
 (define (world-cell-is-solid-for-player cx cy)
   (case (world-grid-ref cx cy)
-    ((0 2 3 +) #f)
+    ((0 h e e+ + +c +t) #f)
     (else #t)))
+
+(define (world-cell-is-charged cx cy)
+  (case (world-grid-ref cx cy)
+    ((h e+ +c +t) #t)
+    (else #f)))
+
+(define (world-cell-is-fully-charged cx cy)
+  (case (world-grid-ref cx cy)
+    ((h e+ +c) #t)
+    (else #f)))
+
+(define (world-cell-has-charged-neighbours cx cy)
+  (or (world-cell-is-charged (- cx 1) cy)
+      (world-cell-is-charged (+ cx 1) cy)
+      (world-cell-is-charged cx (- cy 1))
+      (world-cell-is-charged cx (+ cy 1))))
+
+(define (world-cell-has-fully-charged-neighbours cx cy)
+  (or (world-cell-is-fully-charged (- cx 1) cy)
+      (world-cell-is-fully-charged (+ cx 1) cy)
+      (world-cell-is-fully-charged cx (- cy 1))
+      (world-cell-is-fully-charged cx (+ cy 1))))
 
 (define (world-cell-is-wireable cx cy)
   (case (world-grid-ref cx cy)
-    ((+ 2 3) #t)
+    ((h e e+ + +c +t) #t)
     (else #f)))
 
 (define (world-point-is-solid-for-particles x y)
   (case (world-grid-ref (floor-quotient (->int x) 16)
                         (floor-quotient (->int y) 16))
-    ((0 3 +) #f)
+    ((0 e e+ + +c +t) #f)
     (else #t)))
 
 (define (draw-world-cell cx cy)
-  (let ((x (* cx 16))
-        (y (* cy 16)))
+  (let ((x    (* cx 16))
+        (y    (* cy 16))
+        (cell (world-grid-ref cx cy)))
     ;
-    (case (world-grid-ref cx cy)
+    (case cell
       ((0) #f)
       ((1) (al:draw-rectangle/fill
              (+ x  0) (+ y  0)
@@ -113,40 +177,40 @@
              (+ x 16) (+ y 16)
              color-black
              2.0))
-      ((2) (draw-heart (+ x 8)
+      ((h) (draw-heart (+ x 8)
                        (+ y 8)
                        8))
 
-      ((+) (when (world-cell-is-wireable (- cx 1) cy)
+      ((+ +c +t)
+       (let ((color (if (and (eq? '+ cell)
+                             (not (world-cell-has-charged-neighbours cx cy)))
+                      color-black
+                      color-wire-charged)))
+         (when (world-cell-is-wireable (- cx 1) cy)
              (al:draw-line
                (+ x  8) (+ y  8)
                (+ x  0) (+ y  8)
-               color-black
-               2.0))
+               color 2.0))
            (when (world-cell-is-wireable (+ cx 1) cy)
              (al:draw-line
                (+ x  8) (+ y  8)
                (+ x 16) (+ y  8)
-               color-black
-               2.0))
+               color 2.0))
            (when (world-cell-is-wireable cx (- cy 1))
              (al:draw-line
                (+ x  8) (+ y  8)
                (+ x  8) (+ y  0)
-               color-black
-               2.0))
+               color 2.0))
            (when (world-cell-is-wireable cx (+ cy 1))
              (al:draw-line
                (+ x  8) (+ y  8)
                (+ x  8) (+ y 16)
-               color-black
-               2.0))
+               color 2.0))
            (al:draw-circle/fill
              (+ x 8) (+ y 8)
-             1.0
-             color-black))
+             1.0 color)))
 
-      ((3) (al:draw-triangle/fill
+      ((e) (al:draw-triangle/fill
              (+ x  2) (+ y  2)
              (+ x 14) (+ y  2)
              (+ x  8) (+ y 14)
@@ -189,10 +253,26 @@
               (loop (+ x 1) y))))))
 
 
-(define (tick-world-cell! cx cy)
+(define (tick-world-cell-wire! cx cy)
   (let* ((cell (world-grid-ref cx cy)))
     (case cell
-      ((2) ; Heart
+      ((+) ; Uncharged wire
+       (world-grid-set! cx cy cell)
+       (when (world-cell-has-fully-charged-neighbours cx cy)
+         (world-grid-set! cx cy '+c)))
+      ((+c) ; Charged wire
+       (world-grid-set! cx cy '+t))
+      ((+t) ; Charged wire tail
+       (world-grid-set! cx cy '+)))))
+
+(define (tick-world-cell! cx cy)
+  (let* ((cell (world-grid-ref cx cy)))
+    (world-grid-set! cx cy cell)
+    (case cell
+      ((h) ; Heart
+       (when (and (= (quotient (+ player-x 0) 16) cx)
+                  (= (quotient (+ player-y 0) 16) cy))
+         (world-grid-set! cx cy 0))
        (when (= (random 5) 0)
          (begin
            (add-basic-env-particle!
@@ -205,8 +285,10 @@
              (* 1 1/50 (- (random 101) 50)))
            ;
            )))
-      ((3) ; Enemy spawner
-       (when (= (random 10) 0)
+
+      ((e) ; Enemy spawner
+       (when (and (world-cell-has-charged-neighbours cx cy)
+                  (= (random 10) 0))
          (begin
            (add-enemy-1-mob!
              180
@@ -233,6 +315,7 @@
                                   16))
          (visible-y-max (quotient (+ camera-y -1 logical-height -8)
                                   16)))
+
     (let loop ((x visible-x-min)
                (y visible-y-min))
       (cond ((> y visible-y-max) #f)
@@ -240,7 +323,10 @@
              (loop visible-x-min (+ y 1)))
             (else
               (tick-world-cell! x y)
-              (loop (+ x 1) y))))))
+              (tick-world-cell-wire! x y)
+              (loop (+ x 1) y))))
+
+    (world-grid-swap!)))
 
 (define (collide-box-with-world
           old-x old-y
