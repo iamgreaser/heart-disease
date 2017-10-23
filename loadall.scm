@@ -31,7 +31,12 @@
   (when (member 'restart inputs-new)
     (unless (member 'restart inputs-old)
       (set! restart-flag #t)))
-  (when restart-flag (new-game!))
+  (when restart-flag
+    (new-game!)
+    (set! music-rhythm-bass
+      (fresh-new-bass-rhythm))
+    (set! music-pattern-bass
+      (fresh-new-bass-pattern)))
 
   (handle-input!)
   (when (member 'pause inputs-new)
