@@ -55,6 +55,11 @@
          (al:make-display display-width
                           display-height))))
 
+;; Set the window title
+(al:display-window-title-set!
+  al-display
+  "Heart Disease")
+
 ;; Start main thread if it's not alive
 (cond ((not main-thread)
        (main-loop-start))

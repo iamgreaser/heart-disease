@@ -11,11 +11,11 @@
      #( 0 0 0 + + + + 0 0 0 0 0 0 0 0 0 0 0 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 1 1 1 1 1 1 + 0 0 0 0 0 0 0 + + + + + 0 0 0 0 0 0 0 0 0 0 0 e 0 0 e 0 0 e 0 0 0)
      #( 0 0 0 0 0 0 + 0 0 0 0 0 0 0 + 1 0 0 + 0 0 0 0 0 0 0 0 0 0 0 + 0 0 + 0 0 + 0 0 0)
-     #( 0 0 0 + + + + 0 0 0 0 1 0 0 + 1 0 0 + 0 0 0 0 0 0 0 0 0 0 0 + + h + h + + 0 0 0)
-     #( 0 0 0 + 1 1 1 1 0 0 0 0 0 0 + 1 0 0 + 0 0 0 0 0 0 0 0 0 0 0 e + + + + + e 0 0 0)
-     #( 0 0 + + + + h 1 0 0 0 0 0 0 + 1 0 0 + 0 0 0 e 0 0 0 0 0 0 0 0 0 h + h 0 0 0 0 0)
-     #( 0 0 + 0 0 0 0 1 0 0 0 0 0 0 h 1 0 0 + + + + + 0 0 0 0 0 0 0 0 0 + + + 0 0 0 0 0)
-     #( 1 0 + 1 1 1 1 1 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 e + + e + + e 0 0 0)
+     #( 0 0 0 + + + + 0 0 0 0 1 0 0 + 1 0 0 + 0 0 0 0 0 0 0 0 0 0 0 + + + + + + + 0 0 0)
+     #( 0 0 0 + 1 1 1 1 0 0 0 0 0 0 + 1 0 0 + 0 0 0 0 0 0 0 0 0 0 0 e 0 0 h 0 0 e 0 0 0)
+     #( 0 0 + + + + h 1 0 0 0 0 0 0 + 1 0 0 + 0 0 0 e 0 0 0 0 0 0 0 0 0 0 + 0 0 0 0 0 0)
+     #( 0 0 + 0 0 0 0 1 0 0 0 0 0 0 h 1 0 0 + + + + + 0 0 0 0 0 0 0 + + + + + + + 0 0 0)
+     #( 1 0 + 1 1 1 1 1 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 e 0 0 e 0 0 e 0 0 0)
      #( 1 0 e 1 9 9 9 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 1 1 1 1 9 9 1 1 0 0 0 0 0 0 1 1 0 h + + + 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 9 9 9 9 9 9 1 e 0 0 0 0 0 0 1 1 0 0 0 0 + 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
@@ -31,7 +31,7 @@
      #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 9 9 1 0 0 e e e e e e e e 0 0 0 0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 9 9 1 0 0 + + + + + + + + 0 0 0 0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 1 0 0 0 0 h 0 0 h 0 0 0 0 0 0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 9 9 1 0 0 0 0 0 0 0 0 0 + + + + h 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      ))
 
 (define (create-world)
@@ -76,8 +76,20 @@
               out-row x
               (vector-ref in-row x))))))))
 
+(define (world-find-wires)
+  (let loop ((x 0) (y 0))
+    (cond ((>= y (vector-length world-grid))
+           '())
+          ((>= x (vector-length
+                   (vector-ref world-grid y)))
+           (loop 0 (+ y 1)))
+          ((memv (world-grid-ref x y) '(+ +c +t))
+           (cons `(,x ,y) (loop (+ x 1) y)))
+          (else (loop (+ x 1) y)))))
+
 (define world-grid      (create-world))
 (define world-grid-next (clone-world world-grid))
+(define world-wires     (world-find-wires))
 
 (define (new-game!)
   (set! player-x 160)
@@ -85,7 +97,10 @@
   (set! particle-list    '())
   (set! particle-kd-tree '(empty))
   (set! mob-list         '())
-  (set! mob-kd-tree      '(empty)))
+  (set! mob-kd-tree      '(empty))
+  (set! world-grid      (create-world))
+  (set! world-grid-next (clone-world world-grid))
+  (set! world-wires     (world-find-wires)))
 
 (define world-width
   (apply max
@@ -323,8 +338,11 @@
              (loop visible-x-min (+ y 1)))
             (else
               (tick-world-cell! x y)
-              (tick-world-cell-wire! x y)
               (loop (+ x 1) y))))
+
+    (do ((p world-wires (cdr p)))
+      ((null? p))
+      (apply tick-world-cell-wire! (car p)))
 
     (world-grid-swap!)))
 
