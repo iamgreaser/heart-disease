@@ -3,35 +3,36 @@
 (define color-world-wall-1 (al:make-color-rgb 170 170 170))
 
 (define world-grid-template
-  '#(#( 0 0 0 h 1 1 1 0 p 0 1 1 1 1 h + + + + + e 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 0 0 0 + 1 1 1 0 0 0 1 1 1 1 0 0 0 0 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 0 0 0 + 1 0 0 0 0 0 0 0 0 1 1 1 1 0 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 0 0 0 + 1 0 0 0 0 0 0 0 0 1 1 1 1 0 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 0 0 0 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 0 0 0 + + + + 0 0 0 0 0 0 0 0 0 0 0 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 1 1 1 1 1 1 + 0 0 0 0 0 0 0 + + + + + 0 0 0 0 0 0 0 0 0 0 0 e 0 0 e 0 0 e 0 0 0)
-     #( 0 0 0 0 0 0 + 0 0 0 0 0 0 0 + 1 0 0 + 0 0 0 0 0 0 0 0 0 0 0 + 0 0 + 0 0 + 0 0 0)
-     #( 0 0 0 + + + + 0 0 0 0 1 0 0 + 1 0 0 + 0 0 0 0 0 0 0 0 0 0 0 + + + + + + + 0 0 0)
-     #( 0 0 0 + 1 1 1 1 0 0 0 0 0 0 + 1 0 0 + 0 0 0 0 0 0 0 0 0 0 0 e 0 0 h 0 0 e 0 0 0)
-     #( 0 0 + + + + h 1 0 0 0 0 0 0 + 1 0 0 + 0 0 0 e 0 0 0 0 0 0 0 0 0 0 + 0 0 0 0 0 0)
-     #( 0 0 + 0 0 0 0 1 0 0 0 0 0 0 h 1 0 0 + + + + + 0 0 0 0 0 0 0 + + + + + + + 0 0 0)
-     #( 1 0 + 1 1 1 1 1 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 e 0 0 e 0 0 e 0 0 0)
-     #( 1 0 e 1 9 9 9 1 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 1 1 1 1 9 9 1 1 0 0 0 0 0 0 1 1 0 h + + + 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 9 9 9 9 1 e 0 0 0 0 0 0 1 1 0 0 0 0 + 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 1 1 1 1 1 + 0 0 0 0 0 0 1 1 1 1 1 1 + 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 1 h + + + + 0 0 0 0 0 0 1 9 9 9 9 1 + 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 1 9 9 9 9 1 + 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 1 9 9 9 9 1 + 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 9 1 + 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 9 1 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 9 1 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 9 1 e 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 9 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 1 0 0 e e e e e e e e 0 0 0 0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 1 0 0 + + + + + + + + 0 0 0 0 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 9 9 1 0 0 0 0 0 0 0 0 0 + + + + h 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+  '#(#( 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 1 0 p 0 1 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 1 0 0 0 1 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 9 9 9 9 9 9 9 9 9 9 9 9 9 9 1 1 1 0 0 0 1 1 1 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 9 9 9 9 9 9 9 9 9 9 9 9 9 9 1 0 0 0 0 0 0 0 1 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 9 9 9 9 9 9 9 9 9 9 9 9 9 9 1 0 0 0 0 0 0 0 1 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 9 9 9 9 9 9 9 9 9 9 9 9 9 9 1 0 0 0 0 + + + 1 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 9 9 9 9 9 9 9 9 9 9 9 9 9 9 1 + + + + + 0 + 1 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 9 9 9 9 9 9 9 9 9 9 9 9 9 9 1 + 0 0 0 + 0 + 1 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 9 9 9 9 9 9 9 9 9 9 9 9 9 9 1 h 0 + + + 0 h 1 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 9 9 9 9 9 9 9 9 9 9 9 9 9 9 1 1 1 d d d 1 1 1 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 1 0 0 0 1 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 1 0 0 0 1 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 9 9 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 9 9 9 9 9 9 9)
+     #( 1 1 1 + e 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 9 9 9 9 9 9 9)
+     #( 1 e + + e 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 h 0 1 9 9 9 9 9 9 9)
+     #( 1 e + + e 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 + + + + + + + 0 1 9 9 9 9 9 9 9)
+     #( 1 e + 1 1 g g g 1 1 1 1 1 1 1 1 1 d d d 1 1 1 0 + 0 1 1 1 1 1 1 1 9 9 9 9 9 9 9)
+     #( 1 e + 1 1 + + + 1 1 1 1 1 1 1 1 1 + + + 1 9 1 0 + 0 1 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 1 e + 1 1 0 + 0 d + + + + + + + d 0 h 0 1 9 1 0 + 0 1 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 1 e + 1 1 0 + 0 d + 0 0 0 1 + + d 0 0 0 1 9 1 + + + 1 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 1 e + 1 1 0 + 0 d + 0 h 1 1 + 1 1 1 1 1 1 1 1 e e e 1 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 1 e + 1 1 e + e 1 1 1 + 1 1 + 1 0 0 + g 0 0 0 0 0 0 1 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 1 1 + + + + + + + + + + 1 1 + + + h + g 0 0 0 0 0 0 1 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 1 1 1 1 1 1 1 1 1 1 0 + 1 1 0 0 0 0 + g 0 0 0 0 0 0 1 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 9 9 9 9 9 9 9 9 9 1 1 + 1 1 + + + + + g 0 0 1 1 1 1 1 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 9 9 9 9 9 9 9 9 9 9 1 + 1 1 d d d d d 1 1 1 1 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 9 9 9 9 9 9 9 9 9 9 1 + 1 1 0 0 0 0 0 1 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 9 9 9 9 9 9 9 9 9 9 1 + + + + + + + + 1 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 9 9 9 9 9 9 9 9 9 9 1 1 1 e e e e e e 1 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9)
+     #( 9 9 9 9 9 9 9 9 9 9 9 9 1 1 1 1 1 1 1 1 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9)
      ))
 
 (define (world-grid-ref x y)
@@ -92,7 +93,7 @@
           ((>= x (vector-length
                    (vector-ref world-grid y)))
            (loop 0 (+ y 1)))
-          ((memv (world-grid-ref x y) '(+ +c +t))
+          ((memv (world-grid-ref x y) '(+ +c +t d d+ d- g g+ g-))
            (cons `(,x ,y) (loop (+ x 1) y)))
           (else (loop (+ x 1) y)))))
 
@@ -112,6 +113,7 @@
   (set! world-grid-next  (clone-world world-grid))
   (set! world-wires      (world-find-wires))
   (set! restart-flag     #f)
+  (set! win-flag         #f)
   (let loop ((x 0) (y 0))
     (cond ((>= y world-height) #f)
           ((>= x world-width)
@@ -152,7 +154,7 @@
 
 (define (world-cell-is-solid-for-player cx cy)
   (case (world-grid-ref cx cy)
-    ((0 h e e+ + +c +t) #f)
+    ((0 p h e e+ + +c +t d g+ g-) #f)
     (else #t)))
 
 (define (world-cell-is-charged cx cy)
@@ -179,13 +181,13 @@
 
 (define (world-cell-is-wireable cx cy)
   (case (world-grid-ref cx cy)
-    ((h e e+ + +c +t) #t)
+    ((h e e+ + +c +t d d+ d- g g+ g-) #t)
     (else #f)))
 
 (define (world-point-is-solid-for-particles x y)
   (case (world-grid-ref (floor-quotient (->int x) 16)
                         (floor-quotient (->int y) 16))
-    ((0 e e+ + +c +t) #f)
+    ((0 p e e+ + +c +t d g+ g-) #f)
     (else #t)))
 
 (define (draw-world-cell cx cy)
@@ -194,16 +196,16 @@
         (cell (world-grid-ref cx cy)))
     ;
     (case cell
-      ((0 p) #f)
-      ((1) (al:draw-rectangle/fill
-             (+ x  0) (+ y  0)
-             (+ x 16) (+ y 16)
-             color-world-wall-1)
-           (al:draw-rectangle
-             (+ x  0) (+ y  0)
-             (+ x 16) (+ y 16)
-             color-black
-             2.0))
+      ((0 p d g+ g-) #f)
+      ((1 d+ d- g) (al:draw-rectangle/fill
+                   (+ x  0) (+ y  0)
+                   (+ x 16) (+ y 16)
+                   color-world-wall-1)
+                 (al:draw-rectangle
+                   (+ x  0) (+ y  0)
+                   (+ x 16) (+ y 16)
+                   color-black
+                   2.0))
       ((h) (draw-heart (+ x 8)
                        (+ y 8)
                        8))
@@ -283,6 +285,26 @@
 (define (tick-world-cell-wire! cx cy)
   (let* ((cell (world-grid-ref cx cy)))
     (case cell
+      ((d)  ; Open door
+       (when (world-cell-has-charged-neighbours cx cy)
+         (world-grid-set! cx cy 'd+)))
+      ((d+) ; Closed door
+       (unless (world-cell-has-charged-neighbours cx cy)
+         (world-grid-set! cx cy 'd-)))
+      ((d-) ; Opening door
+       (if (world-cell-has-charged-neighbours cx cy)
+         (world-grid-set! cx cy 'd+)
+         (world-grid-set! cx cy 'd)))
+      ((g)  ; Closed gate
+       (when (world-cell-has-charged-neighbours cx cy)
+         (world-grid-set! cx cy 'g+)))
+      ((g+) ; Open gate
+       (unless (world-cell-has-charged-neighbours cx cy)
+         (world-grid-set! cx cy 'g-)))
+      ((g-) ; Closing gate
+       (if (world-cell-has-charged-neighbours cx cy)
+         (world-grid-set! cx cy 'g+)
+         (world-grid-set! cx cy 'g)))
       ((+) ; Uncharged wire
        (world-grid-set! cx cy cell)
        (when (world-cell-has-fully-charged-neighbours cx cy)
