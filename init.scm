@@ -27,6 +27,7 @@
 (define camera-x 0)
 (define camera-y 0)
 (define pause-enabled-flag #f)
+(define restart-flag       #f)
 
 ;; Config
 (define display-width   960)

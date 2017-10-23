@@ -8,6 +8,8 @@
     (w move-up)
     (s move-down)
 
+    (r restart)
+
     (p pause)
     
     (f12 take-screenshot)))
@@ -25,6 +27,11 @@
 
 (define (main-loop)
   (thread-sleep! 1/60)
+
+  (when (member 'restart inputs-new)
+    (unless (member 'restart inputs-old)
+      (set! restart-flag #t)))
+  (when restart-flag (new-game!))
 
   (handle-input!)
   (when (member 'pause inputs-new)

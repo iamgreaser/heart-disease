@@ -29,6 +29,10 @@
          (new-x    target-x)
          (new-y    target-y))
 
+    ;; Restart if we hit the player
+    (when (< delta-len 6.0)
+      (set! restart-flag #t))
+
     ;; Collide with world
     (call-with-values
       (lambda ()

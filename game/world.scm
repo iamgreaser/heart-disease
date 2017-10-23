@@ -98,9 +98,10 @@
   (set! particle-kd-tree '(empty))
   (set! mob-list         '())
   (set! mob-kd-tree      '(empty))
-  (set! world-grid      (create-world))
-  (set! world-grid-next (clone-world world-grid))
-  (set! world-wires     (world-find-wires)))
+  (set! world-grid       (create-world))
+  (set! world-grid-next  (clone-world world-grid))
+  (set! world-wires      (world-find-wires))
+  (set! restart-flag     #f))
 
 (define world-width
   (apply max
