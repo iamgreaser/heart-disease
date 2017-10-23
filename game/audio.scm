@@ -17,6 +17,9 @@
 
 (define music-funk-phase-ref 0.0)
 
+;;;
+;;; BASS
+;;;
 (define bass-rhythms
   #(;#(4 4 4 4)
     #(4 4 3 3 2)
@@ -109,10 +112,20 @@
   (fresh-new-bass-rhythm))
 (define music-pattern-bass
   (fresh-new-bass-pattern))
-(define music-bass-freq 0.0)
-(define music-bass-offs 0.0)
-(define music-bass-vol  0.0)
+(define music-bass-freq        0.0)
+(define music-bass-offs        0.0)
+(define music-bass-vol         0.0)
 (define music-bass-vol-target  0.0)
+
+;;;
+;;; DRUMS
+;;;
+(define music-kick-freq        0.0)
+(define music-kick-offs        0.0)
+(define music-kick-vol         0.0)
+(define music-snare-vol        0.0)
+(define music-hatc-vol         0.0)
+
 
 ;; Restart sound
 (al:stop-all-samples)
@@ -150,13 +163,17 @@
 
 ;; Function to mix audio
 (define (tick-music-fragment! frag)
-  (let* ((sample-count  (al:audio-stream-length    al-music-stream))
-         (mixing-freq   (al:audio-stream-frequency al-music-stream))
-         (sec-count     (/ sample-count mixing-freq))
-         (sample-ticks  (/ (* music-bpm music-tpb) 60.0 mixing-freq))
-         (funk-ticks    (/ sample-ticks 4.0))
-         (mixing-buffer (make-f32vector sample-count))
-         (bass-decay    (exp (/ -5.0 mixing-freq))))
+  (let* ((sample-count     (al:audio-stream-length    al-music-stream))
+         (mixing-freq      (al:audio-stream-frequency al-music-stream))
+         (sec-count        (/ sample-count mixing-freq))
+         (sample-ticks     (/ (* music-bpm music-tpb) 60.0 mixing-freq))
+         (funk-ticks       (/ sample-ticks 4.0))
+         (mixing-buffer    (make-f32vector sample-count))
+         (kick-decay-vol   (exp (/ -5.0  mixing-freq)))
+         (kick-decay-freq  (exp (/ -30.0 mixing-freq)))
+         (snare-decay-vol  (exp (/ -20.0 mixing-freq)))
+         (hatc-decay-vol   (exp (/ -60.0 mixing-freq)))
+         (bass-decay       (exp (/ -5.0  mixing-freq))))
     (dynamic-wind
       (lambda () #t)
       (lambda ()
@@ -181,8 +198,16 @@
                   (set! music-pattern-bass
                     (fresh-new-bass-pattern)))
                 (when (= (modulo music-tick 4) 0)
+                  (set! music-kick-vol       1.0)
+                  (set! music-kick-freq      (* 400.0 dt))
+                  (set! music-kick-offs      0.0)
                   (set! music-funk-phase-ref
                     (/ (current-milliseconds) 1000.0)))
+                (when (= (modulo music-tick 8) 4)
+                  (set! music-snare-vol       1.0))
+                (when (= (modulo music-tick 1) 0)
+                  (set! music-hatc-vol        1.0))
+
                 (let ((bass-pat (vector-ref
                                   music-pattern-bass
                                   (modulo music-tick
@@ -193,7 +218,7 @@
                       (* (note->freq bass-pat) dt))
                     (set! music-bass-vol-target 1.0)))))
 
-            ;; 
+            ;; Bass
             (set! music-bass-vol-target  (* music-bass-vol-target
                                             bass-decay))
             (set! music-bass-vol         (+ music-bass-vol
@@ -203,9 +228,37 @@
             (set! music-bass-offs        (+ music-bass-offs
                                             music-bass-freq))
 
+            ;; Kick
+            (set! music-kick-vol         (* music-kick-vol
+                                            kick-decay-vol))
+            (set! music-kick-offs        (+ music-kick-offs
+                                            music-kick-freq))
+            (set! music-kick-freq        (* music-kick-freq
+                                            kick-decay-freq))
+
+            ;; Snare
+            (set! music-snare-vol        (* music-snare-vol
+                                            snare-decay-vol))
+
+            ;; Hihat closed
+            (set! music-hatc-vol         (* music-hatc-vol
+                                            hatc-decay-vol))
+
             ;;
             (f32vector-set! mixing-buffer i
-                            (+ (* (ins-bass music-bass-offs)
+                            (+ (* (cos (* tau music-kick-offs))
+                                  0.8
+                                  music-kick-vol)
+                               (* (cos (* tau 0.3 music-kick-offs))
+                                  0.8
+                                  music-kick-vol)
+                               (* (/ (- (random 101) 50) 50.0)
+                                  0.6
+                                  (min 1.0 (* music-snare-vol 2.0)))
+                               (* (/ (- (random 101) 50) 50.0)
+                                  0.2
+                                  (min 1.0 (* music-hatc-vol 2.0)))
+                               (* (ins-bass music-bass-offs)
                                   0.8
                                   music-bass-vol))))))
       (lambda ()
