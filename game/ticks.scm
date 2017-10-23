@@ -124,12 +124,12 @@
     0 (- logical-height 8)
     logical-width logical-height
     color-black)
-  (do ((i 3 (- i 1)))
-    ((<= i 0))
-    ;
-    (draw-heart (+ 6 (* (- i 1) 10))
-                (- logical-height 3)
-                5))
+  ;(do ((i 3 (- i 1)))
+  ;  ((<= i 0))
+  ;  ;
+  ;  (draw-heart (+ 6 (* (- i 1) 10))
+  ;              (- logical-height 3)
+  ;              5))
 
   ;; Pause mode
   (when pause-enabled-flag

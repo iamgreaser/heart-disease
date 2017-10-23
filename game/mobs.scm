@@ -123,9 +123,6 @@
     ))
 
 
-;;;
-;;; KD-TREE VERSION
-;;;
 (define (for-each-mob-at-of fn point-x point-y radius mob-type)
   (let ((radius2 (* radius radius)))
     (let ((fn (lambda (mob)
@@ -146,23 +143,4 @@
         mob-kd-tree)
       ;;(for-each fn mob-list)
       )))
-
-;;;
-;;; NAIVE VERSION
-;;;
-'(define (for-each-mob-at-of fn point-x point-y radius mob-type)
-  (let ((radius2 (* radius radius)))
-    (do ((p mob-list (cdr p)))
-      ((null? p))
-      (let* ((mob     (car p))
-             (mob-x   (car (cdddr  mob)))
-             (mob-y   (car (cddddr mob)))
-             (delta-x (- mob-x point-x))
-             (delta-y (- mob-y point-y))
-             (dist2   (+ (* delta-x delta-x)
-                         (* delta-y delta-y))))
-        (when (and (<= dist2 radius2)
-                   (eq? mob-type (car mob)))
-          (apply fn (cons (cddr mob)
-                          (cddr mob))))))))
 
