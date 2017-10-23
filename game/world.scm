@@ -3,8 +3,8 @@
 (define color-world-wall-1 (al:make-color-rgb 170 170 170))
 
 (define world-grid-template
-  '#(#( 0 0 0 h 1 1 1 0 0 0 0 1 1 1 h + + + + + e 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-     #( 0 0 0 + 1 1 1 0 0 0 0 1 1 1 0 0 0 0 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+  '#(#( 0 0 0 h 1 1 1 0 p 0 1 1 1 1 h + + + + + e 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+     #( 0 0 0 + 1 1 1 0 0 0 1 1 1 1 0 0 0 0 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 0 0 0 + 1 0 0 0 0 0 0 0 0 1 1 1 1 0 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 0 0 0 + 1 0 0 0 0 0 0 0 0 1 1 1 1 0 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      #( 0 0 0 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 + 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
@@ -34,6 +34,16 @@
      #( 9 9 1 0 0 0 0 0 0 0 0 0 + + + + h 1 9 9 9 9 9 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
      ))
 
+(define (world-grid-ref x y)
+  (cond ((<  x 0) 9)
+        ((<  y 0) 9)
+        ((>= y (vector-length world-grid)) 9)
+        (else
+          (let ((row (vector-ref world-grid y)))
+            (if (>= x (vector-length row))
+              9
+              (vector-ref row x))))))
+
 (define (create-world)
   (let* ((grid (make-vector
                  (vector-length
@@ -51,9 +61,8 @@
           (do ((x 0 (+ x 1)))
             ((>= x (vector-length in-row))
              out-row)
-            (vector-set!
-              out-row x
-              (vector-ref in-row x))))))))
+            (let ((cell (vector-ref in-row x)))
+              (vector-set! out-row x cell))))))))
 
 (define (clone-world in-grid)
   (let* ((grid (make-vector
@@ -91,9 +100,10 @@
 (define world-grid-next (clone-world world-grid))
 (define world-wires     (world-find-wires))
 
+
 (define (new-game!)
-  (set! player-x 160)
-  (set! player-y  10)
+  (set! player-x         160)
+  (set! player-y          10)
   (set! particle-list    '())
   (set! particle-kd-tree '(empty))
   (set! mob-list         '())
@@ -101,7 +111,19 @@
   (set! world-grid       (create-world))
   (set! world-grid-next  (clone-world world-grid))
   (set! world-wires      (world-find-wires))
-  (set! restart-flag     #f))
+  (set! restart-flag     #f)
+  (let loop ((x 0) (y 0))
+    (cond ((>= y world-height) #f)
+          ((>= x world-width)
+           (loop 0 (+ y 1)))
+          ((eq? (world-grid-ref x y)'p)
+           (set! player-x (+ 8 (* 16 x)))
+           (set! player-y (+ 8 (* 16 y)))
+           (loop (+ x 1) y))
+          (else
+           (loop (+ x 1) y))))
+
+  )
 
 (define world-width
   (apply max
@@ -115,17 +137,6 @@
   (let ((temp world-grid))
     (set! world-grid      world-grid-next)
     (set! world-grid-next temp)))
-
-
-(define (world-grid-ref x y)
-  (cond ((<  x 0) 9)
-        ((<  y 0) 9)
-        ((>= y (vector-length world-grid)) 9)
-        (else
-          (let ((row (vector-ref world-grid y)))
-            (if (>= x (vector-length row))
-              9
-              (vector-ref row x))))))
 
 (define (world-grid-set! x y cell)
   (cond ((<  x 0) #f)
@@ -183,7 +194,7 @@
         (cell (world-grid-ref cx cy)))
     ;
     (case cell
-      ((0) #f)
+      ((0 p) #f)
       ((1) (al:draw-rectangle/fill
              (+ x  0) (+ y  0)
              (+ x 16) (+ y 16)
